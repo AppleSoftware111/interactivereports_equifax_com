@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificación de Certificados</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: #f0f0f0;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #9f1b32;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .header-logo {
+            height: 45px;
+            max-width: 200px;
+            object-fit: contain;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        .card {
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .title {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 22px;
+        }
+
+        .form-label {
+            display: block;
+            color: #b71c1c;
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-label::after {
+            content: '*';
+            margin-left: 2px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-bottom: 1px solid #7a7a7a;
+            font-size: 16px;
+            color: #000;
+            background-color: #f6f6f6;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: #000;
+            background-color: #f6f6f6;
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-bottom: 1px solid #7a7a7a;
+            font-size: 16px;
+            color: #000;
+            background-color: #f6f6f6;
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-bottom-color: #000;
+            background-color: #f6f6f6;
+        }
+
+        .captcha-button-wrapper {
+            margin-top: 16px;
+            text-align: center;
+        }
+
+        .captcha-container {
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+            margin-bottom: 0;
+        }
+
+        .captcha-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .captcha-checkbox {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #9e9e9e;
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .captcha-checkbox.checked {
+            background: transparent;
+            border-color: transparent;
+        }
+
+        .captcha-checkbox.checked::after {
+            content: '✓';
+            color: #2e7d32;
+            font-size: 30px;
+            line-height: 1;
+            font-weight: 700;
+        }
+
+        .captcha-text {
+            font-size: 13px;
+            color: #000;
+        }
+
+        .captcha-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .captcha-links {
+            font-size: 10px;
+            color: #555;
+        }
+
+        .recaptcha-logo {
+            width: 36px;
+            height: auto;
+            display: block;
+        }
+
+        .captcha-brand-text {
+            font-size: 11px;
+            color: #000;
+            line-height: 1.1;
+        }
+
+        .btn-submit {
+            width: 180px;
+            padding: 10px 0;
+            background: #e0e0e0;
+            color: #9e9e9e;
+            border: none;
+            border-radius: 4px;
+            font-size: 20px;
+            font-weight: 500;
+            cursor: not-allowed;
+            display: inline-block;
+            margin: 0;
+        }
+
+        .btn-submit:disabled {
+            background: #e0e0e0;
+            color: #9e9e9e;
+            box-shadow: none;
+        }
+
+        .btn-submit.enabled {
+            background: #9f1b32;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        }
+
+        .btn-submit.enabled:active {
+            transform: translateY(1px);
+        }
+
+        .info-text {
+            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 13px;
+            color: #000;
+            line-height: 1.45;
+            background: #f6f6f6;
+        }
+
+        .error-message {
+            background: #ffebee;
+            border-left: 4px solid #b71c1c;
+            padding: 10px 15px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #b71c1c;
+            display: none;
+        }
+
+        .success-message {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #2e7d32;
+            display: none;
+        }
+
+        .result-card {
+            display: none;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-label {
+            color: #666;
+            font-size: 13px;
+        }
+
+        .result-value {
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .status-valid {
+            color: #4caf50;
+            font-weight: bold;
+        }
+
+        .status-invalid {
+            color: #f44336;
+            font-weight: bold;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #b71c1c;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="logo.jpg" alt="S&M Recover" class="header-logo">
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h1 class="title">Verificación de Certificados o Informes</h1>
+
+            <div class="error-message" id="errorMessage"></div>
+            <div class="success-message" id="successMessage"></div>
+
+            <form id="verificationForm">
+                <div class="form-group">
+                    <label class="form-label">N° de Certificado</label>
+                    <input type="text" class="form-input" id="certificateNumber"
+                           placeholder="Ingrese el número de certificado"
+                           value="" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">País</label>
+                    <select class="form-select" id="country" required>
+                        <option value="">--Seleccione--</option>
+                        <option value="CL" selected>Chile</option>
+                        <option value="AR">Argentina</option>
+                        <option value="PE">Perú</option>
+                        <option value="CO">Colombia</option>
+                        <option value="MX">México</option>
+                        <option value="EC">Ecuador</option>
+                        <option value="UY">Uruguay</option>
+                        <option value="PY">Paraguay</option>
+                        <option value="BO">Bolivia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Documento</label>
+                    <input type="text" class="form-input" id="documentNumber"
+                           placeholder="Ingrese su número de documento"
+                           value="17.105.175-4" required>
+                </div>
+
+                <div class="captcha-container">
+                    <div class="captcha-left">
+                        <div class="captcha-checkbox" id="captchaCheckbox"></div>
+                        <span class="captcha-text">No soy un robot</span>
+                    </div>
+                    <div class="captcha-right">
+                        <img src="RecaptchaLogo.svg.png" alt="reCAPTCHA" class="recaptcha-logo">
+                        <div class="captcha-brand-text">reCAPTCHA</div>
+                        <div class="captcha-links">Privacidad - Condiciones</div>
+                    </div>
+                </div>
+
+                <div class="captcha-button-wrapper">
+                    <button type="button" class="btn-submit" id="submitBtn" disabled>Consultar</button>
+                </div>
+
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Verificando...</p>
+                </div>
+            </form>
+
+            <div class="result-card" id="resultCard">
+                <div class="result-item">
+                    <span class="result-label">Estado:</span>
+                    <span class="result-value" id="resultStatus"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Certificado:</span>
+                    <span class="result-value" id="resultCertificate"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Documento:</span>
+                    <span class="result-value" id="resultDocument"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">País:</span>
+                    <span class="result-value" id="resultCountry"></span>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Fecha de emisión:</span>
+                    <span class="result-value" id="resultDate"></span>
+                </div>
+            </div>
+
+            <p class="info-text">A través de Certificados, evitas falsificación de documentos y aseguras la autenticidad del certificado que te ha sido entregado a través de las plataformas proporcionadas por Equifax</p>
+        </div>
+    </div>
+
+    <script>
+        const DEFAULTS = {
+            country: 'CL',
+            document: '0171051754',
+            verificationCode: '5b78fd0a3af2xb956d2dfb',
+            pdfPath: '/platinum17105175-4.pdf'
+        };
+
+        function prefillFromQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+
+            const verificationCode = params.get('verificationCode') || DEFAULTS.verificationCode;
+            const country = params.get('country') || DEFAULTS.country;
+            const documentNumber = params.get('document') || DEFAULTS.document;
+
+            const certificateInput = document.getElementById('certificateNumber');
+            const countrySelect = document.getElementById('country');
+            const documentInput = document.getElementById('documentNumber');
+
+            if (certificateInput) certificateInput.value = verificationCode;
+            if (countrySelect) countrySelect.value = country;
+            if (documentInput) documentInput.value = documentNumber;
+        }
+
+        function getFinalVerificationUrl() {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+
+            if (!params.get('country')) params.set('country', DEFAULTS.country);
+            if (!params.get('document')) params.set('document', DEFAULTS.document);
+            if (!params.get('verificationCode')) params.set('verificationCode', DEFAULTS.verificationCode);
+
+            url.search = params.toString();
+            return url.toString();
+        }
+
+        // Captcha simulation
+        const captchaCheckbox = document.getElementById('captchaCheckbox');
+        const submitBtn = document.getElementById('submitBtn');
+        let captchaVerified = false;
+
+        captchaCheckbox.addEventListener('click', function() {
+            this.classList.toggle('checked');
+            captchaVerified = this.classList.contains('checked');
+            submitBtn.disabled = !captchaVerified;
+            submitBtn.classList.toggle('enabled', captchaVerified);
+        });
+
+        // Form submission
+        const form = document.getElementById('verificationForm');
+        const loading = document.getElementById('loading');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        const resultCard = document.getElementById('resultCard');
+
+        prefillFromQueryParams();
+        console.log('QR URL:', getFinalVerificationUrl());
+
+        submitBtn.addEventListener('click', function(e) {
+            if (!captchaVerified) {
+                showError('Por favor, complete la verificación de seguridad.');
+                return;
+            }
+
+            const certificateNumber = document.getElementById('certificateNumber').value;
+            const country = document.getElementById('country').value;
+            const documentNumber = document.getElementById('documentNumber').value;
+
+            if (!certificateNumber || !country || !documentNumber) {
+                showError('Por favor, complete todos los campos requeridos.');
+                return;
+            }
+
+            // Show loading
+            loading.style.display = 'block';
+            submitBtn.style.display = 'none';
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            resultCard.style.display = 'none';
+
+            // Simulate verification and then download PDF
+            setTimeout(() => {
+                loading.style.display = 'none';
+                submitBtn.style.display = 'block';
+
+                // For demo: always consider it valid and download the document
+                showSuccess('Certificado verificado exitosamente.');
+                showResult(certificateNumber, documentNumber, country, true);
+
+                // Cache-bust to avoid stale PDF from browser/ngrok caches
+                const DOC_URL = `${DEFAULTS.pdfPath}?v=${Date.now()}`;
+
+                const a = document.createElement('a');
+                a.href = DOC_URL;
+                a.target = '_blank';
+                a.rel = 'noopener';
+                a.download = '';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+            }, 800);
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function showResult(certificate, documentNumber, country, isValid) {
+            const countryNames = {
+                'CL': 'Chile',
+                'AR': 'Argentina',
+                'PE': 'Perú',
+                'CO': 'Colombia',
+                'MX': 'México',
+                'EC': 'Ecuador',
+                'UY': 'Uruguay',
+                'PY': 'Paraguay',
+                'BO': 'Bolivia'
+            };
+
+            document.getElementById('resultStatus').textContent = isValid ? 'VÁLIDO' : 'NO ENCONTRADO';
+            document.getElementById('resultStatus').className = 'result-value ' + (isValid ? 'status-valid' : 'status-invalid');
+            document.getElementById('resultCertificate').textContent = certificate;
+            document.getElementById('resultDocument').textContent = documentNumber;
+            document.getElementById('resultCountry').textContent = countryNames[country] || country;
+            document.getElementById('resultDate').textContent = isValid ? new Date().toLocaleDateString('es-ES') : '-';
+
+            resultCard.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
