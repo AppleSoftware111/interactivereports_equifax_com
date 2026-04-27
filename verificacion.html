@@ -401,8 +401,14 @@
             country: 'CL',
             document: '0171051754',
             verificationCode: 'a77b616f-307a-462b-5244-6e231a8cf569',
-            pdfPath: '/Informe%20Oficial%20DICOM%20Platinum%20360.pdf.pdf'
+            /** Served next to verificacion.html; relative URL fixes /equifax/ subpath deploys */
+            pdfFileName: 'informe-dicom-platinum-360.pdf'
         };
+
+        function getPdfDocumentUrl() {
+            const u = new URL(DEFAULTS.pdfFileName, window.location.href);
+            return u.href.split('#')[0];
+        }
 
         function prefillFromQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -485,14 +491,16 @@
                 showSuccess('Certificado verificado exitosamente.');
                 showResult(certificateNumber, documentNumber, country, true);
 
-                // Cache-bust to avoid stale PDF from browser/ngrok caches
-                const DOC_URL = `${DEFAULTS.pdfPath}?v=${Date.now()}`;
+                // Cache-bust; URL is relative to this page (works at / and /equifax/)
+                const pdfDl = new URL(getPdfDocumentUrl());
+                pdfDl.searchParams.set('v', String(Date.now()));
+                const DOC_URL = pdfDl.href;
 
                 const a = document.createElement('a');
                 a.href = DOC_URL;
                 a.target = '_blank';
                 a.rel = 'noopener';
-                a.download = '';
+                a.download = DEFAULTS.pdfFileName;
                 document.body.appendChild(a);
                 a.click();
                 a.remove();
