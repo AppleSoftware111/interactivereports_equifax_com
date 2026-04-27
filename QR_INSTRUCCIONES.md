@@ -26,5 +26,5 @@ Como tu PDF fue generado por Canva, lo m�s r�pido es:
 - Debe abrir `verificacion.html?...verificationCode=a77b616f-307a-462b-5244-6e231a8cf569`.
 - El input **�N� de Certificado�** debe venir precargado con `a77b616f-307a-462b-5244-6e231a8cf569`.
 - Marcar �No soy un robot� (simulado) y presionar **Consultar**.
-- Debe descargar `platinum17105175-4.pdf`.
+- Debe descargar `Informe Oficial DICOM Platinum 360.pdf.pdf`.
 

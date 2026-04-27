@@ -12,14 +12,14 @@
     { "source": "/equifax/", "destination": "/verificacion.html" },
 
     { "source": "/equifax/verificacion.html", "destination": "/verificacion.html" },
-    { "source": "/equifax/platinum17105175-4.pdf", "destination": "/platinum17105175-4.pdf" },
+    { "source": "/equifax/Informe Oficial DICOM Platinum 360.pdf.pdf", "destination": "/Informe Oficial DICOM Platinum 360.pdf.pdf" },
     { "source": "/equifax/logo.jpg", "destination": "/logo.jpg" },
     { "source": "/equifax/RecaptchaLogo.svg.png", "destination": "/RecaptchaLogo.svg.png" },
     { "source": "/equifax/QR_INSTRUCCIONES.md", "destination": "/QR_INSTRUCCIONES.md" }
   ],
   "headers": [
     {
-      "source": "/platinum17105175-4.pdf",
+      "source": "/Informe Oficial DICOM Platinum 360.pdf.pdf",
       "headers": [
         { "key": "Cache-Control", "value": "no-store" }
       ]
