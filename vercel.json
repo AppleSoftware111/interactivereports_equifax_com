@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/verificacion.html?country=CL&document=0171051754&verificationCode=5b78fd0a3af2xb956d2dfb",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/verificacion.html" },
     { "source": "/equifax", "destination": "/verificacion.html" },
